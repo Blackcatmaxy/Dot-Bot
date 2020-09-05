@@ -3,7 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using LiteDB;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace DotBot.Server.Data
 {
@@ -11,6 +12,8 @@ namespace DotBot.Server.Data
     {
         [BsonId]
         public ulong userID;
+
+//        public SavedUserEXP() { }
 
         public SavedUserEXP(ulong ID) => userID = ID;
     }

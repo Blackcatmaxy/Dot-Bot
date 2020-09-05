@@ -1,6 +1,9 @@
 ﻿using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
+using DotBot.Server.Data;
 using DotBot.Shared;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DotBot.Server.Bot
 {
-    public class CommandModule : ModuleBase<SocketCommandContext>
+    public class InfoModule : ModuleBase<SocketCommandContext>
     {
         [Command("withexp")]
         public async Task WithEXP(uint EXP)
@@ -38,8 +41,10 @@ namespace DotBot.Server.Bot
         [RequireContext(ContextType.Guild)]
         public async Task ListEXP()
         {
-            var collection = EXPManager.EXPDataBase.GetCollection<UserEXP>(Context.Guild.Id.ToLetters());
-            var user = collection.FindById(Context.User.Id);
+            var collection = Context.Guild.GetEXPCollection();
+            var builder = Builders<SavedUserEXP>.Filter;
+            var filter = builder.Eq(doc => doc.userID, Context.User.Id);
+            var user = collection.Find(filter).FirstOrDefault();
 
             if (user == null)
             {
@@ -48,6 +53,28 @@ namespace DotBot.Server.Bot
             }
 
             await ReplyAsync($"You are level {user.Level} with {user.EXP} XP and {EXPManager.levelRequirements[user.Level + 1] - user.EXP} XP needed to level up!");
+        }
+
+        [Command("EXPRoles")]
+        [RequireContext(ContextType.Guild)]
+        public async Task ListRole()
+        {
+            var collection = Context.Guild.GetSettingsCollection();
+            var settings = collection.Get<CommonSettings>("CommonSettings");
+            if (settings == null || !settings.roles.Any())
+            {
+                await ReplyAsync("No roles are set to be given for levels");
+                return;
+            }
+
+            var embed = new EmbedBuilder();
+            embed.WithTitle("Roles");
+            foreach (EXPRole role in settings.roles)
+            {
+                SocketRole guildRole = Context.Guild.GetRole(role.ID);
+                embed.AddField($"Level {role.LevelRequirement}", guildRole.Mention);
+            }
+            await ReplyAsync(embed: embed.Build());
         }
     }
 }

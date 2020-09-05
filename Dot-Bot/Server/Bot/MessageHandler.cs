@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Collections.Concurrent;
 using Discord.WebSocket;
 using Discord.Commands;
-using LiteDB;
 
 namespace DotBot.Server.Bot
 {
