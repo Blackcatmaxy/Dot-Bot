@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DotBot.Shared
 {
-    public class CommonSettings
+    public partial class CommonSettings
     {
         public List<EXPRole> roles = new List<EXPRole>();
     }

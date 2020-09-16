@@ -21,10 +21,11 @@ namespace DotBot.Server
         public EXPManager(DiscordSocketClient client)
         {
             BsonClassMap.RegisterClassMap<SavedUserEXP>();
+            BsonClassMap.RegisterClassMap<CommonSettings>();
 
             dbClient = new MongoClient("mongodb://127.0.0.1:27017");
-            guildDataBase = dbClient.GetDatabase("settings");
-            EXPDataBase = dbClient.GetDatabase("EXP");
+            guildDataBase = dbClient.GetDatabase("EXPSettings");
+            EXPDataBase = dbClient.GetDatabase("EXPData");
             _client = client;
             uint lastLevelReq = 0;
             for (int i = 0; i < 120; i++)

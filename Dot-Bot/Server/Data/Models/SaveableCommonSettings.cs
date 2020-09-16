@@ -9,7 +9,5 @@ namespace DotBot.Server.Data
 {
     public class SaveableCommonSettings : CommonSettings
     {
-        [BsonId]
-        public const int ID = 1;
     }
 }

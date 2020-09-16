@@ -13,8 +13,6 @@ namespace DotBot.Server.Data
         [BsonId]
         public ulong userID;
 
-//        public SavedUserEXP() { }
-
         public SavedUserEXP(ulong ID) => userID = ID;
     }
 }

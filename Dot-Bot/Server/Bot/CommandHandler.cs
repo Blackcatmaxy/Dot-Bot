@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Humanizer;
 
 namespace DotBot.Server.Bot
 {
@@ -23,6 +25,8 @@ namespace DotBot.Server.Bot
         {
             // Hook the MessageReceived event into our command handler
             _client.MessageReceived += HandleCommandAsync;
+            _commands.CommandExecuted += CommandExecuted;
+
 
             // Here we discover all of the command modules in the entry
             // assembly and load them. Starting from Discord.NET 2.0, a
@@ -55,11 +59,19 @@ namespace DotBot.Server.Bot
             var context = new SocketCommandContext(_client, message);
 
             // Execute the command with the command context we just
-            // created, along with the service provider for precondition checks.
+            // created, along with the service provider for precondfucition checks.
             await _commands.ExecuteAsync(
                 context: context,
                 argPos: argPos,
                 services: null);
+        }
+
+        private async Task CommandExecuted(Optional<CommandInfo> command, ICommandContext context, IResult result)
+        {
+            if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
+            {
+                await context.Channel.SendMessageAsync(result.ErrorReason.Truncate(1500));
+            }
         }
     }
 }

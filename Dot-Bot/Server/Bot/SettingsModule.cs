@@ -18,20 +18,18 @@ namespace DotBot.Server.Bot
 
         }
 
-        //[Command("addrole")]
-        //public async Task AddRole(SocketRole role, byte level)
-        //{
-        //    var collection = Context.Guild.GetSettingsCollection();
-        //    var settings = collection.GetCommonSettings() ?? new SaveableCommonSettings();
-        //    if (settings.roles.Any(r => r.ID == role.Id))
-        //    {
-        //        await ReplyAsync("Role is already included");
-        //        return;
-        //    }
-        //    settings.roles.Add(new EXPRole { ID = role.Id, LevelRequirement = (byte)level });
-        //    //var document = BsonMapper.Global.ToDocument<CommonSettings>(settings);
-        //    collection.Upsert(SaveableCommonSettings.ID, settings);
-        //    await ReplyAsync($"Role {role.Name} will now be given out to people who reach level {level} when they level up");
-        //}
+        [Command("addrole")]
+        public async Task AddRole(SocketRole role, byte level)
+        {
+            var settings = Context.Guild.Get<CommonSettings>(true);
+            if (settings.file.roles.Any(r => r.ID == role.Id))
+            {
+                await ReplyAsync("Role is already included");
+                return;
+            }
+            settings.file.roles.Add(new EXPRole { ID = role.Id, LevelRequirement = (byte)level });
+            settings.Save();
+            await ReplyAsync($"Role {role.Name} will now be given out to people who reach level {level} when they level up");
+        }
     }
 }

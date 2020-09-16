@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DotBot.Shared
 {
-    public class UserEXP
+    public partial class UserEXP
     {
         public ulong EXP { get; set; }
         public ushort MessageCount { get; set; }

@@ -41,10 +41,7 @@ namespace DotBot.Server.Bot
         [RequireContext(ContextType.Guild)]
         public async Task ListEXP()
         {
-            var collection = Context.Guild.GetEXPCollection();
-            var builder = Builders<SavedUserEXP>.Filter;
-            var filter = builder.Eq(doc => doc.userID, Context.User.Id);
-            var user = collection.Find(filter).FirstOrDefault();
+            var user = Context.Guild.GetEXP(Context.User.Id, false).file;
 
             if (user == null)
             {
@@ -59,9 +56,8 @@ namespace DotBot.Server.Bot
         [RequireContext(ContextType.Guild)]
         public async Task ListRole()
         {
-            var collection = Context.Guild.GetSettingsCollection();
-            var settings = collection.Get<CommonSettings>("CommonSettings");
-            if (settings == null || !settings.roles.Any())
+            var settings = Context.Guild.Get<CommonSettings>(false);
+            if (settings == null || !settings.file.roles.Any())
             {
                 await ReplyAsync("No roles are set to be given for levels");
                 return;
@@ -69,7 +65,7 @@ namespace DotBot.Server.Bot
 
             var embed = new EmbedBuilder();
             embed.WithTitle("Roles");
-            foreach (EXPRole role in settings.roles)
+            foreach (EXPRole role in settings.file.roles)
             {
                 SocketRole guildRole = Context.Guild.GetRole(role.ID);
                 embed.AddField($"Level {role.LevelRequirement}", guildRole.Mention);
