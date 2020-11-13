@@ -16,19 +16,6 @@ namespace DotBot.Server.Data
 {
     public static class DataManipulator
     {
-        //private const string letters = "ABCDEFGHIJ";
-
-        //public static string ToLetters(this ulong number)
-        //{
-        //    string result = "";
-        //    foreach (char c in number.ToString())
-        //    {
-        //        var digit = byte.Parse(c.ToString());
-        //        result += letters[digit];
-        //    }
-        //    return result;
-        //}
-
         public static IMongoCollection<SavedUserEXP> GetEXPCollection(this SocketGuild guild)
         {
             return EXPManager.EXPDataBase.GetCollection<SavedUserEXP>(guild.Id.ToString());

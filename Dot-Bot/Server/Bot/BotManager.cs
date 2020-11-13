@@ -20,7 +20,8 @@ namespace DotBot.Server.Bot
                 ConnectionTimeout = 6000,
                 MessageCacheSize = 120,
                 ExclusiveBulkDelete = false,
-                DefaultRetryMode = RetryMode.AlwaysRetry
+                DefaultRetryMode = RetryMode.AlwaysRetry,
+                GatewayIntents = GatewayIntents.GuildMessages | GatewayIntents.Guilds | GatewayIntents.DirectMessages
             };
             client = new DiscordSocketClient(config);
             client.Ready += Ready;
